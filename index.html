@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Игра в города</title>
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300|Open+Sans:300,400" rel="stylesheet">
+    <link rel="stylesheet" href="css/normalize.css">
+    <link rel="stylesheet" href="css/style.css">
+    <script src="js/cities.js"></script>
+    <script src="https://api-maps.yandex.ru/2.0-stable/?load=package.standard&lang=ru-RU" type="text/javascript"></script>
+</head>
+<body>
+    <header class="header">
+        <h1>Поиграем в города?</h1>
+    </header>
+    <div class="chat">
+        <div class="messages-area"></div>
+        <div class="input-area">
+            <input class="input-area__textfield" type="text" placeholder="Например, Суздаль"><button class="input-area__voice-input" disabled>Ввод голосом</button><button class="input-area__submit-button">Вот мой город!</button>
+        </div>
+    </div>
+    <div id="ymap"></div>
+    <script src="js/main.js"></script>
+</body>
+</html>
