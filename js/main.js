@@ -15,6 +15,10 @@ class Game {
     this.forbiddenLetters = ['ь', 'ъ', 'ы'];
 
     this.cityNameInput = document.getElementsByClassName('input-area__textfield')[0];
+    this.cityNameInput.addEventListener('keyup', (e) => {
+      if (e.keyCode === 13) this.onSubmitButtonPress();
+    });
+    this.cityNameInput.focus();
     this.submitButton = document.getElementsByClassName('input-area__submit-button')[0];
     this.submitButton.addEventListener('click', this.onSubmitButtonPress.bind(this));
     this.messages = document.getElementsByClassName('messages-area')[0];
@@ -25,6 +29,7 @@ class Game {
       center: [10, 150],
       zoom: 2
     });
+    this.map.behaviors.disable(['drag', 'rightMouseButtonMagnifier', 'scrollZoom', 'dblClickZoom']);
   }
 
   geocode(cityInput) {
@@ -34,6 +39,7 @@ class Game {
   onSubmitButtonPress() {
     if (!this.cityNameInput.value) return;
     this.playersTurn(this.cityNameInput.value);
+    this.cityNameInput.focus();
   }
 
   createMessage(cityName, whos) {
