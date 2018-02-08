@@ -9,7 +9,10 @@ let citiesArray = cities.split("\n").map((cityString) => {
 		if (matches[1].match(/^[а-яА-Я].*/i)) return matches[1].toLowerCase();
 	};
 	return null;
-}).filter(city => city);
+}).filter((city, i, arr) => {
+  if (!city) return false;
+  return (arr.indexOf(city) === -1);
+});
 
 let scriptContent = `let allCities = JSON.parse('${JSON.stringify(citiesArray)}');`
 

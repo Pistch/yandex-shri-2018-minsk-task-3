@@ -29,7 +29,7 @@ class Game {
       center: [20, 150],
       zoom: 2
     });
-    this.map.behaviors.disable(['drag', 'rightMouseButtonMagnifier', 'scrollZoom', 'dblClickZoom']);
+    this.map.behaviors.disable(['rightMouseButtonMagnifier', 'dblClickZoom']).enable(['scrollZoom']);
   }
 
   geocode(cityInput) {
