@@ -1,27 +1,73 @@
 'use strict';
 
-class Game {
-
+class Popup {
   constructor() {
-    this.playersCities = [];
-    this.computersCities = [];
-    this.cities = {};
-    allCities.sort(() => Math.random() - 0.5); // перемешаем города в исходном массиве для того, чтобы компьютер пореже повторялся в разных играх
-    allCities.forEach(cityName => {
-      let firstLetter = cityName[0];
-      if (!this.cities[firstLetter]) this.cities[firstLetter] = [];
-      this.cities[firstLetter].push(cityName);
-    });
-    this.forbiddenLetters = ['ь', 'ъ', 'ы'];
+    this.popup = document.getElementsByClassName('popup__gag')[0];
+    this.popupWindow = document.getElementsByClassName('popup__window')[0];
+  }
 
+  open(content) {
+    this.popupWindow.appendChild(content);
+    this.popup.style.display = 'flex';
+  }
+
+  close() {
+    this.popup.style.display = 'none';
+    let children = this.popupWindow.children,
+      childrenCount = children.length;
+    for (let i = 0; i < childrenCount; i++) {
+      this.popupWindow.removeChild(children[i]);
+    };
+  }
+}
+
+class Game {
+  constructor() {
+    this.forbiddenLetters = ['ь', 'ъ', 'ы'];
+    this.turnDuration = false;
     this.cityNameInput = document.getElementsByClassName('input-area__textfield')[0];
     this.cityNameInput.addEventListener('keyup', (e) => {
       if (e.keyCode === 13) this.onSubmitButtonPress();
     });
-    this.cityNameInput.focus();
     this.submitButton = document.getElementsByClassName('input-area__submit-button')[0];
     this.submitButton.addEventListener('click', this.onSubmitButtonPress.bind(this));
     this.messages = document.getElementsByClassName('messages-area')[0];
+    this.popup = new Popup();
+    this.popup.open(this.makeSettings());
+  }
+
+  newGame() {
+    let difficulty = parseInt(this.popup.popupWindow.querySelector('input[name=difficulty]:checked').value),
+      timeLimit = this.popup.popupWindow.querySelector('input[name=time-limit]').checked;
+    this.playersCities = [];
+    this.computersCities = [];
+    this.cities = {};
+    this.setupCities(difficulty);
+    if (timeLimit) {
+      this.turnDuration = 30000 + (difficulty / 2) * 10000;
+    } else {
+      this.turnDuration = false;
+    };
+    this.cleanMessages();
+    this.popup.close();
+    this.cityNameInput.focus();
+  }
+
+  setupCities(difficulty) {
+    allCities.sort(() => Math.random() - 0.5); // перемешаем города в исходном массиве для того, чтобы компьютер пореже повторялся в разных играх
+    let thisGameCities = [];
+    if (difficulty) {                          // при низкой сложности упростим задачу игрока, сократив количество городов, доступных компьютеру
+      thisGameCities = allCities.filter(() => {
+        return ((Math.random() - difficulty * 0.1) > 0);
+      });
+    } else {
+      thisGameCities = [ ...allCities ];
+    };
+    thisGameCities.forEach(cityName => {
+      let firstLetter = cityName[0];
+      if (!this.cities[firstLetter]) this.cities[firstLetter] = [];
+      this.cities[firstLetter].push(cityName);
+    });
   }
 
   initMap() {
@@ -51,6 +97,13 @@ class Game {
     newMessage.scrollIntoView(true);
   }
 
+  cleanMessages() {
+    let messages = document.querySelectorAll('.messages-area__message');
+    if (messages.length > 0) {
+      messages.forEach(el => el.parentNode.removeChild(el));
+    }
+  }
+
   playersTurn(cityInput) {
     cityInput = cityInput.toLowerCase();
     if (allCities.indexOf(cityInput) === -1) { // TODO: вывод ошибок
@@ -72,7 +125,7 @@ class Game {
         return;
       };
     }
-
+    clearTimeout(this.turnTimeout);
     let cityGeocoder = this.geocode(cityInput);
     cityGeocoder.then((res) => {
       let city = res.geoObjects.get(0);
@@ -93,6 +146,7 @@ class Game {
     if (this.forbiddenLetters.indexOf(letter) !== -1) letter = playersLastCity[playersLastCity.length - 2].toLowerCase();
     let cityName = this.cities[letter].pop();
     while ((this.playersCities.indexOf(cityName) !== -1) && (this.computersCities.indexOf(cityName) !== -1)) {
+      if (this.cities[letter].length === 0) return this.victory_player();
       cityName = this.cities[letter].pop();
     };
     let cityGeocoder = this.geocode(cityName);
@@ -107,7 +161,31 @@ class Game {
       this.map.geoObjects.add(city);
       this.computersCities.push(cityName);
       this.createMessage(cityNameForMap, 'computer');
+      if (this.turnDuration) {
+        this.turnTimeout = setTimeout(this.victory_computer.bind(this), this.turnDuration);
+      }
     });
+  }
+
+  makeSettings() {
+    let settings = document.querySelector('.templates .templates__settings').cloneNode(true);
+    settings.classList.remove('templates__settings');
+    settings.classList.add('settings');
+    settings.lastElementChild.addEventListener('click', this.newGame.bind(this));
+    settings.querySelectorAll('input[name=difficulty]')[0].checked = true;
+    return settings;
+  }
+
+  victory_player() {
+    alert('Вы победили!');
+  }
+
+  victory_computer() {
+    alert('Вы не победили...');
+  }
+
+  makeResults() {
+
   }
 }
 

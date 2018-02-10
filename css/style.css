@@ -49,7 +49,7 @@
     height: 65vh;
     background: aliceblue;
     overflow-y: auto;
-    padding: 2em 0 0 0;
+    padding: 2em 0 .6em 0;
 }
 
 .messages-area__message {
@@ -58,7 +58,7 @@
     position: relative;
     border-radius: 5px;
     padding: .6em 1em;
-    margin: 5px 1em;
+    margin: 0 1em 10px 1em;
     font-family: 'Open Sans', sans-serif;
     font-size: 18px;
 }
@@ -152,4 +152,37 @@
     right: 0.2vw;
     margin: 0;
     font-family: 'Open Sans', sans-serif;
+}
+
+.popup__gag {
+    display: none;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-items: center;
+    align-content: stretch;
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    top: 0;
+    left: 0;
+    background: rgba(255,255,255,0.7);
+}
+
+.popup__window {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-items: center;
+    align-content: stretch;
+    width: 60vw;
+    height: 70vh;
+    background: white;
+    border-radius: 20px;
+    box-shadow: 2px 2px 10px 2px rgba(0,0,0,0.2);
+}
+
+.templates {
+    display: none;
 }

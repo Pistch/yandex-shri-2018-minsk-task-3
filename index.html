@@ -6,7 +6,6 @@
     <link href="https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300|Open+Sans:300,400" rel="stylesheet">
     <link rel="stylesheet" href="css/normalize.css">
     <link rel="stylesheet" href="css/style.css">
-    <script src="js/cities.js"></script>
     <script src="https://api-maps.yandex.ru/2.0-stable/?load=package.standard&lang=ru-RU" type="text/javascript"></script>
 </head>
 <body>
@@ -22,6 +21,25 @@
         </div>
     </div>
     <div id="ymap"></div>
+    <div class="popup__gag">
+        <div class="popup__window">
+        </div>
+    </div>
+    <div class="templates">
+        <div class="templates__settings">
+            <h2>Настройки игры</h2>
+            <h3>Сложность:</h3>
+            <form name="settings__form">
+                <label><input type="radio" value="8" name="difficulty"> Низкая</label><br />
+                <label><input type="radio" value="5" name="difficulty"> Средняя</label><br />
+                <label><input type="radio" value="2" name="difficulty"> Высокая</label><br />
+                <label><input type="radio" value="0" name="difficulty"> Нечестно</label><br />
+                <label><input type="checkbox" name="time-limit"> Ограничение по времени</label><br />
+            </form>
+            <button>Начать игру</button>
+        </div>
+    </div>
+    <script src="js/cities.js"></script>
     <script src="js/main.js"></script>
     <script src="https://use.fontawesome.com/68ff3e950f.js"></script>
 </body>
