@@ -107,7 +107,7 @@ class Game {
     recognition.onspeechend = function() {
       recognition.stop();
     };
-
+/*
     recognition.onnomatch = (function() {
       this.spawnError("Нет такого города!");
     }).bind(this);
@@ -117,7 +117,7 @@ class Game {
       this.spawnError("Нет разобрал вашу речь, попробуйте повторить...");
     }).bind(this);
     console.log(recognition);
-    this.recognizer = recognition;
+    this.recognizer = recognition; */
   }
 
   geocode(cityInput) {
