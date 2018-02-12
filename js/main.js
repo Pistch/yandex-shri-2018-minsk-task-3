@@ -107,6 +107,7 @@ class Game {
     recognition.onspeechend = function() {
       recognition.stop();
     };
+    recognition.start();
     this.recognizer = recognition;
 /*
     recognition.onnomatch = (function() {
