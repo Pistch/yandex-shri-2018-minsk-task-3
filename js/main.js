@@ -95,7 +95,7 @@ class Game {
     const SpeechGrammarList = window.SpeechGrammarList || window.webkitSpeechGrammarList;
     let recognition = new SpeechRecognition(),
       speechRecognitionList = new SpeechGrammarList();
-    speechRecognitionList.addFromString(this.recognitionGrammar, 1);
+    //speechRecognitionList.addFromString(this.recognitionGrammar, 1);
     recognition.grammars = speechRecognitionList;
     recognition.lang = 'en-US';
     recognition.maxAlternatives = 1;
