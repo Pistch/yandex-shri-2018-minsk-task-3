@@ -57,6 +57,7 @@ class Game {
     if (timeLimit) {
       this.turnDuration = 20000 + (difficulty / 2) * 8000;
       this.progressBar.style.display = 'block';
+      this.progressBar.value = 1;
     } else {
       this.turnDuration = false;
       this.progressBar.style.display = 'none';
@@ -304,6 +305,7 @@ class Game {
   }
 
   initiateNewGame() {
+    this.endGame();
     this.popup.close();
     this.popup.open(this.makeSettings());
   }
