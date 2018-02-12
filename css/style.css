@@ -259,6 +259,10 @@
     font-family: 'Open Sans', sans-serif;
 }
 
+.input-area__voice-input_listening {
+    color: #880000;
+}
+
 .input-area__submit-button {
     box-sizing: border-box;
     position: absolute;
@@ -374,6 +378,10 @@
     display: inline-block;
     height: 30vh;
     overflow-y: auto;
+}
+
+.results ul>* {
+    margin: 5px 0;
 }
 
 .rules {

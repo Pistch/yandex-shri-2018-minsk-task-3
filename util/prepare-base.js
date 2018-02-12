@@ -2,16 +2,17 @@
 
 let cities = fs.readFileSync("./countries.sql", "utf8");
 
-let citiesArray = cities.split("\n").map((cityString) => {
+let citiesArray = [];
+cities.split("\n").map((cityString) => {
 	let matches = cityString.match(/\(\d*\,\s*\d*\,\s*\d*\,\s*\'(.*)\'.*/i);
 	if (matches) {
 		matches[1] = matches[1].trim();
 		if (matches[1].match(/^[а-яА-Я].*/i)) return matches[1].toLowerCase();
 	};
 	return null;
-}).filter((city, i, arr) => {
+}).forEach(city => {
   if (!city) return false;
-  return (arr.indexOf(city) === -1);
+  if (citiesArray.indexOf(city) === -1) citiesArray.push(city)
 });
 
 let scriptContent = `let allCities = JSON.parse('${JSON.stringify(citiesArray)}');`

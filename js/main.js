@@ -1,12 +1,5 @@
 'use strict';
 
-/*
- * TODO: верстка списков результатов
- * TODO: отображение активности прослушивания микрофона
- * TODO: give-up button
- * TODO: доработка ошибок ввода голосом.
- */
-
 class Popup {
   constructor() {
     this.popup = document.getElementsByClassName('popup__gag')[0];
@@ -55,6 +48,7 @@ class Game {
   newGame() {
     let difficulty = parseInt(this.popup.popupWindow.querySelector('input[name=difficulty]:checked').value),
       timeLimit = this.popup.popupWindow.querySelector('input[name=time-limit]').checked;
+    this.handsfree = this.popup.popupWindow.querySelector('input[name=handsfree]').checked;
     this.sayCities = this.popup.popupWindow.querySelector('input[name=speak-cities]').checked;
     this.playersCities = [];
     this.computersCities = [];
@@ -71,6 +65,7 @@ class Game {
     this.cleanMap();
     this.popup.close();
     this.cityNameInput.focus();
+    if (this.handsfree) this.recognizer.start();
   }
 
   setupCities(difficulty) {
@@ -110,8 +105,14 @@ class Game {
       this.playersTurn(city);
     }).bind(this));
 
+    this.recognizer.addEventListener('start', (function () {
+      this.speechButton.classList.add('input-area__voice-input_listening');
+    }));
+
     this.recognizer.addEventListener('speechend', (function() {
       this.recognizer.stop();
+      this.speechButton.classList.remove('input-area__voice-input_listening');
+      if (this.handsfree) this.recognizer.start();
     }).bind(this));
 
     this.recognizer.addEventListener('nomatch', (function() {
@@ -120,7 +121,7 @@ class Game {
 
     this.recognizer.addEventListener('error', (function(e) {
       console.log(e);
-      this.spawnError("Нет разобрал вашу речь, попробуйте повторить...");
+      this.spawnError("Ошибка распознавания речи");
     }).bind(this));
   }
 
