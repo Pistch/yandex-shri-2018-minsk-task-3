@@ -93,30 +93,28 @@ class Game {
   recognizeSpeechSetup() {
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     this.recognizer = new SpeechRecognition();
-    recognition.lang = 'ru-RU';
-    recognition.maxAlternatives = 1;
-    recognition.interimResults = false;
-    recognition.addEventListener('result', function(e) {
+    this.recognizer.lang = 'ru-RU';
+    this.recognizer.maxAlternatives = 1;
+    this.recognizer.interimResults = false;
+    this.recognizer.addEventListener('result', function(e) {
       let last = e.results.length - 1, city = e.results[last][0].transcript;
       console.log('city result', city);
       console.log('Confidence: ' + e.results[0][0].confidence);
     });
 
-    recognition.onspeechend = function() {
-      recognition.stop();
+    this.recognizer.onspeechend = function() {
+      this.recognizer.stop();
     };
     this.recognizer.start();
 
-    recognition.onnomatch = (function() {
+    this.recognizer.onnomatch = (function() {
       this.spawnError("Нет такого города!");
     }).bind(this);
 
-    recognition.onerror = (function(e) {
+    this.recognizer.onerror = (function(e) {
       console.log(e);
       this.spawnError("Нет разобрал вашу речь, попробуйте повторить...");
     }).bind(this);
-    
-    this.recognizer = recognition;
   }
 
   geocode(cityInput) {
