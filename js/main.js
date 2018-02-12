@@ -54,6 +54,7 @@ class Game {
     this.computersCities = [];
     this.cities = {};
     this.setupCities(difficulty);
+    this.gameActive = true;
     if (timeLimit) {
       this.turnDuration = 20000 + (difficulty / 2) * 8000;
       this.progressBar.style.display = 'block';
@@ -108,6 +109,10 @@ class Game {
 
     this.recognizer.addEventListener('start', (function () {
       this.speechButton.classList.add('input-area__voice-input_listening');
+    }).bind(this));
+
+    this.recognizer.addEventListener('end', (function () {
+      if (this.handsfree && this.gameActive) this.recognizer.start();
     }).bind(this));
 
     this.recognizer.addEventListener('speechend', (function() {
@@ -224,7 +229,6 @@ class Game {
       if (this.turnDuration) {
         this.progressTick = this.progressBarDecay();
       };
-      if (this.handsfree) this.recognizer.start();
     });
   }
 
@@ -258,6 +262,7 @@ class Game {
   endGame() {
     clearInterval(this.progressTick);
     this.handsfree = false;
+    this.gameActive = false;
     this.recognizer.stop();
   }
 
