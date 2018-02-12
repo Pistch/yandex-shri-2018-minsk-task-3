@@ -108,6 +108,7 @@ class Game {
     };
 
     recognition.onspeechend = function() {
+      console.log('123');
       recognition.stop();
     };
 
