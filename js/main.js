@@ -110,15 +110,15 @@ class Game {
       recognition.stop();
     };
 
-    recognition.onnomatch = function() {
+    recognition.onnomatch = (function() {
       this.spawnError("Нет такого города!");
-    };
+    }).bind(this);
 
-    recognition.onerror = function(e) {
+    recognition.onerror = (function(e) {
       console.log(e);
       this.spawnError("Нет разобрал вашу речь, попробуйте повторить...");
       recognition.start();
-    };
+    }).bind(this);
     console.log(recognition);
     return recognition;
   }
