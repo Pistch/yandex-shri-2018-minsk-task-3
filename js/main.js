@@ -93,6 +93,7 @@ class Game {
   recognizeSpeechSetup() {
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     let recognition = new SpeechRecognition();
+    /*
     recognition.lang = 'ru-RU';
     recognition.maxAlternatives = 1;
     recognition.interimResults = false;
@@ -102,11 +103,9 @@ class Game {
       console.log('Confidence: ' + e.results[0][0].confidence);
     });
 
-    recognition.addEventListener('start', () => console.log('recognition stated'));
-
     recognition.onspeechend = function() {
       recognition.stop();
-    };
+    };*/
     recognition.start();
     this.recognizer = recognition;
 /*
