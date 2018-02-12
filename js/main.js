@@ -91,51 +91,32 @@ class Game {
   }
 
   recognizeSpeechSetup() {
-    window.SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-    const recognition = new SpeechRecognition();
-    recognition.interimResults = true;
-    recognition.lang = 'en-US';
-
-    recognition.addEventListener('result', e => {
-      const transcript = Array.from(e.results)
-        .map(result => result[0])
-        .map(result => result.transcript)
-        .join('');
-
-      console.log(transcript);
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    this.recognizer = new SpeechRecognition();
+    recognition.lang = 'ru-RU';
+    recognition.maxAlternatives = 1;
+    recognition.interimResults = false;
+    recognition.addEventListener('result', function(e) {
+      let last = e.results.length - 1, city = e.results[last][0].transcript;
+      console.log('city result', city);
+      console.log('Confidence: ' + e.results[0][0].confidence);
     });
 
-    recognition.addEventListener('end', recognition.start);
+    recognition.onspeechend = function() {
+      recognition.stop();
+    };
+    this.recognizer.start();
 
-    recognition.start();
-    /*
-        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-        this.recognizer = new SpeechRecognition();
+    recognition.onnomatch = (function() {
+      this.spawnError("Нет такого города!");
+    }).bind(this);
 
-        recognition.lang = 'ru-RU';
-        recognition.maxAlternatives = 1;
-        recognition.interimResults = false;
-        recognition.addEventListener('result', function(e) {
-          let last = e.results.length - 1, city = e.results[last][0].transcript;
-          console.log('city result', city);
-          console.log('Confidence: ' + e.results[0][0].confidence);
-        });
-
-        recognition.onspeechend = function() {
-          recognition.stop();
-        };
-        this.recognizer.start();
-
-        recognition.onnomatch = (function() {
-          this.spawnError("Нет такого города!");
-        }).bind(this);
-
-        recognition.onerror = (function(e) {
-          console.log(e);
-          this.spawnError("Нет разобрал вашу речь, попробуйте повторить...");
-        }).bind(this);
-        console.log(recognition);
-         */
+    recognition.onerror = (function(e) {
+      console.log(e);
+      this.spawnError("Нет разобрал вашу речь, попробуйте повторить...");
+    }).bind(this);
+    
+    this.recognizer = recognition;
   }
 
   geocode(cityInput) {
