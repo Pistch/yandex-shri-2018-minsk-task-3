@@ -107,11 +107,14 @@ class Game {
 
     this.recognizer.addEventListener('start', (function () {
       this.speechButton.classList.add('input-area__voice-input_listening');
-    }));
+    }).bind(this));
 
     this.recognizer.addEventListener('speechend', (function() {
       this.recognizer.stop();
       this.speechButton.classList.remove('input-area__voice-input_listening');
+    }).bind(this));
+
+    this.recognizer.addEventListener('stop', (function() {
       if (this.handsfree) this.recognizer.start();
     }).bind(this));
 
