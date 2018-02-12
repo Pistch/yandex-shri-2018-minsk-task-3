@@ -124,7 +124,7 @@ class Game {
 
     this.recognizer.addEventListener('error', (function(e) {
       console.log(e);
-      this.spawnError("Ошибка распознавания речи");
+      this.spawnError("Вас не слышно");
     }).bind(this));
   }
 
