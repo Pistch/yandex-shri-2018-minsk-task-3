@@ -96,16 +96,15 @@ class Game {
     this.recognizer.lang = 'ru-RU';
     this.recognizer.maxAlternatives = 1;
     this.recognizer.interimResults = false;
-    this.recognizer.addEventListener('result', function(e) {
+    this.recognizer.addEventListener('result', (function(e) {
       let last = e.results.length - 1, city = e.results[last][0].transcript;
       console.log('city result', city);
       console.log('Confidence: ' + e.results[0][0].confidence);
-    });
+    }).bind(this));
 
-    this.recognizer.onspeechend = function() {
+    this.recognizer.addEventListener('speechend', (function() {
       this.recognizer.stop();
-    };
-    this.recognizer.start();
+    }).bind(this));
 
     this.recognizer.onnomatch = (function() {
       this.spawnError("Нет такого города!");
