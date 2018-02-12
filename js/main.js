@@ -114,7 +114,7 @@ class Game {
       this.speechButton.classList.remove('input-area__voice-input_listening');
     }).bind(this));
 
-    this.recognizer.addEventListener('stop', (function() {
+    this.recognizer.addEventListener('end', (function() {
       if (this.handsfree) this.recognizer.start();
     }).bind(this));
 
