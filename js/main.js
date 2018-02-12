@@ -96,14 +96,11 @@ class Game {
     recognition.interimResults = true;
     recognition.lang = 'en-US';
 
-    recognition.addEventListener('result', e =>{
-      //console.log(e.results);
+    recognition.addEventListener('result', e => {
       const transcript = Array.from(e.results)
         .map(result => result[0])
         .map(result => result.transcript)
-        .join('')
-
-      }
+        .join('');
 
       if(transcript.includes('unicorn')){
         console.log('Unicorn');
