@@ -93,11 +93,11 @@ class Game {
   recognizeSpeechSetup() {
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     const SpeechGrammarList = window.SpeechGrammarList || window.webkitSpeechGrammarList;
-    let recognition = new SpeechRecognition(),
-      speechRecognitionList = new SpeechGrammarList();
+    let recognition = new SpeechRecognition();
+      //speechRecognitionList = new SpeechGrammarList();
     //speechRecognitionList.addFromString(this.recognitionGrammar, 1);
     //recognition.grammars = speechRecognitionList;
-    recognition.lang = 'en-US';
+    recognition.lang = 'ru-RU';
     recognition.maxAlternatives = 1;
     recognition.interimResults = false;
     recognition.onresult = function(event) {
