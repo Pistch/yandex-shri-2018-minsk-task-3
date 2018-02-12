@@ -39,7 +39,6 @@ class Game {
     //this.recognitionGrammar = '#JSGF V1.0; grammar cities; public <city> = ' + allCities.join(' | ') + ' ;';
     this.recognizeSpeechSetup();
     this.speechButton.addEventListener('click', (function() {
-      console.log(this.turnDuration, '123');
       this.recognizer.start();
     }).bind(this));
     this.initiateNewGame();
@@ -100,6 +99,8 @@ class Game {
       let last = e.results.length - 1, city = e.results[last][0].transcript;
       console.log('city result', city);
       console.log('Confidence: ' + e.results[0][0].confidence);
+      this.cityNameInput.value = city;
+      this.playersTurn(city);
     }).bind(this));
 
     this.recognizer.addEventListener('speechend', (function() {
