@@ -90,7 +90,7 @@ class Game {
 
   recognizeSpeechSetup() {
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition,
-      SpeechRecognitionGrammar = window.SpeechGrammarList || window.webkitSpeechGrammarList,
+      SpeechGrammarList = window.SpeechGrammarList || window.webkitSpeechGrammarList,
       recognitionGrammar = '#JSGF V1.0; grammar cities; public <city> = ' + allCities.join(' | ') + ' ;';
     let speechRecognitionList = new SpeechGrammarList();
     speechRecognitionList.addFromString(recognitionGrammar, 1);
