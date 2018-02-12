@@ -260,7 +260,7 @@
 }
 
 .input-area__voice-input_listening {
-    color: #880000;
+    color: #880000 !important;
 }
 
 .input-area__submit-button {

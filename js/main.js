@@ -257,15 +257,21 @@ class Game {
     return settings;
   }
 
-  victory_player() {
-    this.popup.open(this.makeResults('Вы победили!'));
+  endGame() {
     clearInterval(this.progressTick);
+    this.handsfree = false;
+    this.recognizer.stop();
+  }
+
+  victory_player() {
+    this.endGame();
+    this.popup.open(this.makeResults('Вы победили!'));
   }
 
   victory_computer() {
+    this.endGame();
     this.popup.open(this.makeResults('Победил компьютер'));
     this.sayCity('Ха-ха! Я победил!');
-    clearInterval(this.progressTick);
   }
 
   makeResults(winner) {
