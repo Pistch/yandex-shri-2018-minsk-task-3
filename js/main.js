@@ -30,10 +30,19 @@ class Game {
       if (e.keyCode === 13) this.onSubmitButtonPress();
     });
     this.submitButton = document.getElementsByClassName('input-area__submit-button')[0];
+    this.speechButton = document.getElementsByClassName('input-area__voice-input')[0];
     this.submitButton.addEventListener('click', this.onSubmitButtonPress.bind(this));
     this.messages = document.getElementsByClassName('messages-area')[0];
+    this.errors = document.getElementsByClassName('messages-area__errors')[0];
+    this.progressBar = document.querySelector('.input-area progress');
     this.popup = new Popup();
-    this.popup.open(this.makeSettings());
+    this.recognitionGrammar = '#JSGF V1.0; grammar cities; public <city> = ' + allCities.join(' | ') + ' ;';
+    this.recognizer = this.recognizeSpeechSetup();
+    this.speechButton.addEventListener('click', (function() {
+      console.log(this.turnDuration, '123');
+      this.recognizer.start();
+    }).bind(this));
+    this.initiateNewGame();
   }
 
   newGame() {
@@ -44,11 +53,14 @@ class Game {
     this.cities = {};
     this.setupCities(difficulty);
     if (timeLimit) {
-      this.turnDuration = 30000 + (difficulty / 2) * 10000;
+      this.turnDuration = 20000 + (difficulty / 2) * 8000;
+      this.progressBar.style.display = 'block';
     } else {
       this.turnDuration = false;
+      this.progressBar.style.display = 'none';
     };
     this.cleanMessages();
+    this.cleanMap();
     this.popup.close();
     this.cityNameInput.focus();
   }
@@ -78,6 +90,39 @@ class Game {
     this.map.behaviors.disable(['rightMouseButtonMagnifier', 'dblClickZoom']).enable(['scrollZoom']);
   }
 
+  recognizeSpeechSetup() {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    const SpeechGrammarList = window.SpeechGrammarList || window.webkitSpeechGrammarList;
+    let recognition = new SpeechRecognition(),
+      speechRecognitionList = new SpeechGrammarList();
+    speechRecognitionList.addFromString(this.recognitionGrammar, 1);
+    recognition.grammars = speechRecognitionList;
+    recognition.lang = 'ru-RU';
+    recognition.maxAlternatives = 1;
+    recognition.interimResults = false;
+    recognition.onresult = function(event) {
+      let last = event.results.length - 1, city = event.results[last][0].transcript;
+      console.log('city result', city);
+      console.log('Confidence: ' + event.results[0][0].confidence);
+    };
+
+    recognition.onspeechend = function() {
+      recognition.stop();
+    };
+
+    recognition.onnomatch = function() {
+      this.spawnError("Нет такого города!");
+    };
+
+    recognition.onerror = function(e) {
+      console.log(e);
+      this.spawnError("Нет разобрал вашу речь, попробуйте повторить...");
+      recognition.start();
+    };
+    console.log(recognition);
+    return recognition;
+  }
+
   geocode(cityInput) {
     return ymaps.geocode(cityInput, { kind: 'locality' });
   }
@@ -104,32 +149,44 @@ class Game {
     }
   }
 
+  cleanMap() {
+    this.map.geoObjects.each(obj => obj.getParent().remove(obj));
+  }
+
+  spawnError(text) {
+    let error = document.createElement('div');
+    error.classList.add('messages-area__errors__error');
+    let errorText = document.createElement('span');
+    errorText.classList.add('messages-area__errors__error__text')
+    errorText.innerText = text;
+    error.appendChild(errorText);
+    this.errors.appendChild(error);
+    setTimeout((function (error) {
+      error.classList.add('messages-area__errors__error__text_fading');
+    }).bind(this, errorText), 2500);
+    setTimeout((function (error) {
+      this.errors.removeChild(error);
+    }).bind(this, error), 3400);
+  }
+
   playersTurn(cityInput) {
     cityInput = cityInput.toLowerCase();
-    if (allCities.indexOf(cityInput) === -1) { // TODO: вывод ошибок
-      console.log('Нет такого города!');
-      return;
-    };
-    if (!((this.playersCities.indexOf(cityInput) === -1) && (this.computersCities.indexOf(cityInput) === -1))) {
-      console.log('Повторяемся, гражданин!');
-      return;
-    };
+    if (allCities.indexOf(cityInput) === -1) return this.spawnError('Нет такого города!');
+    if (!((this.playersCities.indexOf(cityInput) === -1) &&
+        (this.computersCities.indexOf(cityInput) === -1))) return this.spawnError('Повторяемся, гражданин!');
     if (this.computersCities.length !== 0) {
       let lastComputersTurn = this.computersCities[this.computersCities.length - 1],
         lastComputersTurnLetter = lastComputersTurn[lastComputersTurn.length - 1];
       if (this.forbiddenLetters.indexOf(lastComputersTurnLetter) !== -1) {
         lastComputersTurnLetter = lastComputersTurn[lastComputersTurn.length - 2];
       };
-      if (cityInput[0] !== lastComputersTurnLetter) {
-        console.log('Первая буква вашего города должна совпадать с последней буквой города соперника');
-        return;
-      };
+      if (cityInput[0] !== lastComputersTurnLetter) return this.spawnError('Первая буква вашего города должна совпадать с последней буквой города соперника');
     }
-    clearTimeout(this.turnTimeout);
+    clearInterval(this.progressTick);
     let cityGeocoder = this.geocode(cityInput);
     cityGeocoder.then((res) => {
       let city = res.geoObjects.get(0);
-      let cityName = [cityInput[0].toUpperCase(), cityInput.slice(1).toLowerCase()].join('');
+      let cityName = this.capitalise(cityInput);
       city.properties.set('iconContent', cityName);
       city.options.set('preset', 'twirl#greenStretchyIcon');
       this.map.geoObjects.add(city);
@@ -155,16 +212,36 @@ class Game {
       if (!city) {
         return this.computersTurn();
       };
-      let cityNameForMap = [cityName[0].toUpperCase(), cityName.slice(1).toLowerCase()].join('');
+      let cityNameForMap = this.capitalise(cityName);
       city.properties.set('iconContent', cityNameForMap);
       city.options.set('preset', 'twirl#blueStretchyIcon');
       this.map.geoObjects.add(city);
       this.computersCities.push(cityName);
       this.createMessage(cityNameForMap, 'computer');
+      this.sayCity(cityName);
       if (this.turnDuration) {
-        this.turnTimeout = setTimeout(this.victory_computer.bind(this), this.turnDuration);
+        this.progressTick = this.progressBarDecay();
       }
     });
+  }
+
+  progressBarDecay() {
+    this.turnTimePassed = 0;
+    let tick = this.turnDuration / 400;
+    return setInterval((function (base) {
+      this.turnTimePassed += base;
+      this.progressBar.value = 1 - this.turnTimePassed / this.turnDuration;
+      if (this.turnTimePassed >= this.turnDuration) this.victory_computer();
+    }).bind(this, tick), tick);
+  }
+
+  sayCity(city) {
+    let speech = new SpeechSynthesisUtterance(city),
+      voices = window.speechSynthesis.getVoices().filter(voice => voice.lang === 'ru-RU');
+    if (voices[0]) {
+      speech.voice = voices[0];
+      window.speechSynthesis.speak(speech);
+    };
   }
 
   makeSettings() {
@@ -177,15 +254,45 @@ class Game {
   }
 
   victory_player() {
-    alert('Вы победили!');
+    this.popup.open(this.makeResults('Вы победили!'));
+    clearInterval(this.progressTick);
   }
 
   victory_computer() {
-    alert('Вы не победили...');
+    this.popup.open(this.makeResults('Победил компьютер'));
+    this.sayCity('Ха-ха! Я победил!');
+    clearInterval(this.progressTick);
   }
 
-  makeResults() {
+  makeResults(winner) {
+    let results = document.querySelector('.templates .templates__results').cloneNode(true),
+      citiesLists = results.querySelectorAll('ul');
+    results.classList.remove('templates__results');
+    results.classList.add('results');
+    results.querySelector('h2').innerText = winner;
+    this.playersCities.forEach(city => {
+      let cityListItem = document.createElement('li');
+      cityListItem.innerText = this.capitalise(city);
+      citiesLists[0].appendChild(cityListItem);
+    });
+    this.computersCities.forEach(city => {
+      let cityListItem = document.createElement('li');
+      cityListItem.innerText = this.capitalise(city);
+      citiesLists[1].appendChild(cityListItem);
+    });
+    results.lastElementChild.addEventListener('click', this.initiateNewGame.bind(this));
+    return results;
+  }
 
+  initiateNewGame() {
+    this.popup.close();
+    this.popup.open(this.makeSettings());
+  }
+
+  capitalise(text) {
+    return text.split('-').map(part => {
+      return part.split(' ').map(part => part[0].toUpperCase() + part.slice(1)).join(' ');
+    }).join('-');
   }
 }
 

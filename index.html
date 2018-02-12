@@ -13,8 +13,11 @@
         <h1>Поиграем в города?</h1>
     </header> 
     <div class="chat">
-        <div class="messages-area"></div>
+        <div class="messages-area">
+            <div class="messages-area__errors"></div>
+        </div>
         <div class="input-area">
+            <progress></progress>
             <input class="input-area__textfield" type="text" placeholder="Например, Суздаль">
             <button class="input-area__voice-input" disabled><i class="fa fa-3x fa-microphone" title="Ввести название голосом"></i></button>
             <button class="input-area__submit-button"><i class="fa fa-3x fa-angle-double-right" title="Сделать ход!"></i></button>
@@ -30,13 +33,26 @@
             <h2>Настройки игры</h2>
             <h3>Сложность:</h3>
             <form name="settings__form">
-                <label><input type="radio" value="8" name="difficulty"> Низкая</label><br />
-                <label><input type="radio" value="5" name="difficulty"> Средняя</label><br />
-                <label><input type="radio" value="2" name="difficulty"> Высокая</label><br />
+                <label><input type="radio" value="9" name="difficulty"> Низкая</label><br />
+                <label><input type="radio" value="7" name="difficulty"> Средняя</label><br />
+                <label><input type="radio" value="4" name="difficulty"> Высокая</label><br />
                 <label><input type="radio" value="0" name="difficulty"> Нечестно</label><br />
-                <label><input type="checkbox" name="time-limit"> Ограничение по времени</label><br />
+                <label><input type="checkbox" name="time-limit"> Ограничение по времени хода</label><br />
             </form>
             <button>Начать игру</button>
+        </div>
+        <div class="templates__results">
+            <h2>winner</h2>
+            <h3>Результаты:</h3>
+            <div>
+                <ul>
+                    <span>Вы:</span>
+                </ul>
+                <ul>
+                    <span>Компьтер:</span>
+                </ul>
+            </div>
+            <button>Новая игра</button>
         </div>
     </div>
     <script src="js/cities.js"></script>
