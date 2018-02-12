@@ -89,13 +89,8 @@ class Game {
   }
 
   recognizeSpeechSetup() {
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition,
-      SpeechGrammarList = window.SpeechGrammarList || window.webkitSpeechGrammarList,
-      recognitionGrammar = '#JSGF V1.0; grammar cities; public <city> = ' + allCities.join(' | ') + ' ;';
-    let speechRecognitionList = new SpeechGrammarList();
-    speechRecognitionList.addFromString(recognitionGrammar, 1);
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     this.recognizer = new SpeechRecognition();
-    this.recognizer.grammars = speechRecognitionList;
     this.recognizer.lang = 'ru-RU';
     this.recognizer.maxAlternatives = 1;
     this.recognizer.interimResults = false;
