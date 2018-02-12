@@ -36,8 +36,8 @@ class Game {
     this.errors = document.getElementsByClassName('messages-area__errors')[0];
     this.progressBar = document.querySelector('.input-area progress');
     this.popup = new Popup();
-    this.recognitionGrammar = '#JSGF V1.0; grammar cities; public <city> = ' + allCities.join(' | ') + ' ;';
-    this.recognizer = this.recognizeSpeechSetup();
+    //this.recognitionGrammar = '#JSGF V1.0; grammar cities; public <city> = ' + allCities.join(' | ') + ' ;';
+    this.recognizeSpeechSetup();
     this.speechButton.addEventListener('click', (function() {
       console.log(this.turnDuration, '123');
       this.recognizer.start();
@@ -94,14 +94,13 @@ class Game {
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     let recognition = new SpeechRecognition();
     recognition.lang = 'ru-RU';
-    recognition.continuous = true;
     recognition.maxAlternatives = 1;
     recognition.interimResults = false;
-    recognition.onresult = function(event) {
-      let last = event.results.length - 1, city = event.results[last][0].transcript;
+    recognition.addEventListener('result', function(e) {
+      let last = e.results.length - 1, city = e.results[last][0].transcript;
       console.log('city result', city);
-      console.log('Confidence: ' + event.results[0][0].confidence);
-    };
+      console.log('Confidence: ' + e.results[0][0].confidence);
+    });
 
     recognition.addEventListener('start', () => console.log('recognition stated'));
 
@@ -118,7 +117,7 @@ class Game {
       this.spawnError("Нет разобрал вашу речь, попробуйте повторить...");
     }).bind(this);
     console.log(recognition);
-    return recognition;
+    this.recognizer = recognition;
   }
 
   geocode(cityInput) {
