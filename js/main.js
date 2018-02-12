@@ -96,7 +96,7 @@ class Game {
     let recognition = new SpeechRecognition(),
       speechRecognitionList = new SpeechGrammarList();
     //speechRecognitionList.addFromString(this.recognitionGrammar, 1);
-    recognition.grammars = speechRecognitionList;
+    //recognition.grammars = speechRecognitionList;
     recognition.lang = 'en-US';
     recognition.maxAlternatives = 1;
     recognition.interimResults = false;
