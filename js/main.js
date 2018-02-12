@@ -36,7 +36,6 @@ class Game {
     this.errors = document.getElementsByClassName('messages-area__errors')[0];
     this.progressBar = document.querySelector('.input-area progress');
     this.popup = new Popup();
-    //this.recognitionGrammar = '#JSGF V1.0; grammar cities; public <city> = ' + allCities.join(' | ') + ' ;';
     this.recognizeSpeechSetup();
     this.speechButton.addEventListener('click', (function() {
       this.recognizer.start();
@@ -90,8 +89,13 @@ class Game {
   }
 
   recognizeSpeechSetup() {
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition,
+      SpeechRecognitionGrammar = window.SpeechGrammarList || window.webkitSpeechGrammarList,
+      recognitionGrammar = '#JSGF V1.0; grammar cities; public <city> = ' + allCities.join(' | ') + ' ;';
+    let speechRecognitionList = new SpeechGrammarList();
+    speechRecognitionList.addFromString(recognitionGrammar, 1);
     this.recognizer = new SpeechRecognition();
+    this.recognizer.grammars = speechRecognitionList;
     this.recognizer.lang = 'ru-RU';
     this.recognizer.maxAlternatives = 1;
     this.recognizer.interimResults = false;
@@ -161,6 +165,7 @@ class Game {
     setTimeout((function (error) {
       this.errors.removeChild(error);
     }).bind(this, error), 3400);
+    this.sayCity(text);
   }
 
   playersTurn(cityInput) {
