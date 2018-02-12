@@ -1,5 +1,12 @@
 'use strict';
 
+/*
+ * TODO: верстка списков результатов
+ * TODO: отображение активности прослушивания микрофона
+ * TODO: give-up button
+ * TODO: доработка ошибок ввода голосом.
+ */
+
 class Popup {
   constructor() {
     this.popup = document.getElementsByClassName('popup__gag')[0];
