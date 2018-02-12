@@ -114,10 +114,6 @@ class Game {
       this.speechButton.classList.remove('input-area__voice-input_listening');
     }).bind(this));
 
-    this.recognizer.addEventListener('end', (function() {
-      if (this.handsfree) this.recognizer.start();
-    }).bind(this));
-
     this.recognizer.addEventListener('nomatch', (function() {
       this.spawnError("Нет такого города!");
     }).bind(this));
@@ -226,7 +222,8 @@ class Game {
       this.sayCity(cityName);
       if (this.turnDuration) {
         this.progressTick = this.progressBarDecay();
-      }
+      };
+      if (this.handsfree) this.recognizer.start();
     });
   }
 
