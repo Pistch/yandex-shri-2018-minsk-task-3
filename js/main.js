@@ -117,7 +117,6 @@ class Game {
     recognition.onerror = (function(e) {
       console.log(e);
       this.spawnError("Нет разобрал вашу речь, попробуйте повторить...");
-      recognition.start();
     }).bind(this);
     console.log(recognition);
     return recognition;
