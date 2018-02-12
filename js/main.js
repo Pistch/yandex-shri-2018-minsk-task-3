@@ -96,8 +96,6 @@ class Game {
     this.recognizer.interimResults = false;
     this.recognizer.addEventListener('result', (function(e) {
       let last = e.results.length - 1, city = e.results[last][0].transcript;
-      console.log('city result', city);
-      console.log('Confidence: ' + e.results[0][0].confidence);
       this.cityNameInput.value = city;
       this.playersTurn(city);
     }).bind(this));
@@ -160,7 +158,6 @@ class Game {
     setTimeout((function (error) {
       this.errors.removeChild(error);
     }).bind(this, error), 3400);
-    this.sayCity(text);
   }
 
   playersTurn(cityInput) {
@@ -230,6 +227,7 @@ class Game {
   }
 
   sayCity(city) {
+    console.log(city);
     let speech = new SpeechSynthesisUtterance(city),
       voices = window.speechSynthesis.getVoices().filter(voice => voice.lang === 'ru-RU');
     if (voices[0]) {
