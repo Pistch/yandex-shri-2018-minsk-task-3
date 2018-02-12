@@ -40,12 +40,15 @@ class Game {
     this.speechButton.addEventListener('click', (function() {
       this.recognizer.start();
     }).bind(this));
+    document.querySelectorAll('header button')[0].addEventListener('click', this.initiateNewGame.bind(this));
+    document.querySelectorAll('header button')[1].addEventListener('click', this.openRules.bind(this));
     this.initiateNewGame();
   }
 
   newGame() {
     let difficulty = parseInt(this.popup.popupWindow.querySelector('input[name=difficulty]:checked').value),
       timeLimit = this.popup.popupWindow.querySelector('input[name=time-limit]').checked;
+    this.sayCities = this.popup.popupWindow.querySelector('input[name=speak-cities]').checked;
     this.playersCities = [];
     this.computersCities = [];
     this.cities = {};
@@ -227,11 +230,9 @@ class Game {
   }
 
   sayCity(city) {
-    console.log(city);
-    let speech = new SpeechSynthesisUtterance(city),
-      voices = window.speechSynthesis.getVoices().filter(voice => voice.lang === 'ru-RU');
-    if (voices[0]) {
-      speech.voice = voices[0];
+    if (!this.sayCities) return;
+    let speech = new SpeechSynthesisUtterance(city);
+    if (speech) {
       window.speechSynthesis.speak(speech);
     };
   }
@@ -274,6 +275,18 @@ class Game {
     });
     results.lastElementChild.addEventListener('click', this.initiateNewGame.bind(this));
     return results;
+  }
+
+  makeRules() {
+    let rules = document.querySelector('.templates .templates__rules').cloneNode(true);
+    rules.classList.remove('templates__rules');
+    rules.classList.add('rules');
+    rules.lastElementChild.addEventListener('click', this.popup.close.bind(this.popup));
+    return rules;
+  }
+
+  openRules() {
+    this.popup.open(this.makeRules());
   }
 
   initiateNewGame() {

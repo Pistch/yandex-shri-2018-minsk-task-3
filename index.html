@@ -11,6 +11,10 @@
 <body>
     <header class="header">
         <h1>Поиграем в города?</h1>
+        <div class="header__controls">
+            <button class="common-button"><i class="fa fa-undo"></i> Новая игра</button>
+            <button class="common-button"><i class="fa fa-book"></i> Правила</button>
+        </div>
     </header> 
     <div class="chat">
         <div class="messages-area">
@@ -38,8 +42,9 @@
                 <label><input type="radio" value="4" name="difficulty"> Высокая</label><br />
                 <label><input type="radio" value="0" name="difficulty"> Нечестно</label><br />
                 <label><input type="checkbox" name="time-limit"> Ограничение по времени хода</label><br />
+                <label><input type="checkbox" name="speak-cities"> Компьютер озвучивает города</label><br />
             </form>
-            <button>Начать игру</button>
+            <button class="common-button">Начать игру</button>
         </div>
         <div class="templates__results">
             <h2>winner</h2>
@@ -52,7 +57,20 @@
                     <b>Компьтер:</b>
                 </ul>
             </div>
-            <button>Новая игра</button>
+            <button class="common-button">Новая игра</button>
+        </div>
+        <div class="templates__rules">
+            <h2>Правила игры</h2>
+            <p>
+                Игра подразумевает поочерёдное называние игроками городов. Первый игрок может
+                назвать любой город, далее называемые города должны начинаться на букву, на которую закончился город,
+                названный предыдущим игроком. Исключение состовляют буквы "Ь", "Ъ" и "Ы"; в случае, если названный
+                город начинается на одну из них, следующий игрок называет город на предыдущую букву.
+            </p>
+            <p>
+                Тот, кто не сумел назвать город, проигрывает.
+            </p>
+            <button class="common-button">Закрыть</button>
         </div>
     </div>
     <script src="js/cities.js"></script>
