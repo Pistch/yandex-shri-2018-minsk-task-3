@@ -92,7 +92,7 @@ class Game {
 
   recognizeSpeechSetup() {
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-    let recognition = new SpeechRecognition();
+    this.recognizer = new SpeechRecognition();
     /*
     recognition.lang = 'ru-RU';
     recognition.maxAlternatives = 1;
@@ -106,8 +106,7 @@ class Game {
     recognition.onspeechend = function() {
       recognition.stop();
     };*/
-    recognition.start();
-    this.recognizer = recognition;
+    this.recognizer.start();
 /*
     recognition.onnomatch = (function() {
       this.spawnError("Нет такого города!");
