@@ -98,6 +98,7 @@ class Game {
     //speechRecognitionList.addFromString(this.recognitionGrammar, 1);
     //recognition.grammars = speechRecognitionList;
     recognition.lang = 'ru-RU';
+    recognition.continuous = true;
     recognition.maxAlternatives = 1;
     recognition.interimResults = false;
     recognition.onresult = function(event) {
