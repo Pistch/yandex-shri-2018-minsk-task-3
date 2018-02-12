@@ -106,14 +106,14 @@ class Game {
       this.recognizer.stop();
     }).bind(this));
 
-    this.recognizer.onnomatch = (function() {
+    this.recognizer.addEventListener('nomatch', (function() {
       this.spawnError("Нет такого города!");
-    }).bind(this);
+    }).bind(this));
 
-    this.recognizer.onerror = (function(e) {
+    this.recognizer.addEventListener('error', (function(e) {
       console.log(e);
       this.spawnError("Нет разобрал вашу речь, попробуйте повторить...");
-    }).bind(this);
+    }).bind(this));
   }
 
   geocode(cityInput) {
